@@ -36,6 +36,60 @@ public class SudokuChecker
         return res;
     }
 
+    private int[][] useContext(int[][] puzzle)
+    {
+        for(int rowIndex = 0; rowIndex < 9; rowIndex++)
+        {
+            for(int colIndex = 0; colIndex < 9; colIndex++)
+            {
+                if(puzzle[rowIndex][colIndex] > 0) {continue;}
+                //cannot have numbers already in box
+                int[] box = getBox(puzzle, rowIndex, colIndex);
+
+                int[] contextVals = getContextValues(puzzle, rowIndex, colIndex);
+
+                
+                for(int i = 1; i <= 9; i++)
+                {
+                    if (contains(box, i)) {continue;}
+                    if (helpers.countValuesInArray(contextVals, i) == 4)
+                    {
+                        puzzle[rowIndex][colIndex] = i;
+                    }
+                }
+            }
+        }
+        return puzzle;
+    }
+        
+    private int[] getContextValues(int[][] puzzle, int rowIndex, int colIndex)
+    {
+        //locate the top of the box
+        int rowTop = 3 * Math.floorDiv(rowIndex , 3);
+        int colTop = 3 * Math.floorDiv(colIndex , 3);
+
+        //create a container for context values
+        ArrayList<Integer> contextValues = new ArrayList<>();
+        //collect context values
+        for(int row = rowTop; row < rowTop + 3; row++)
+        {
+            if(row == rowIndex) {continue;}
+            for(int val : getRow(puzzle, row))
+            {
+                contextValues.add(val);
+            }
+        }
+        for(int col = colTop; col < colTop + 3; col++)
+        {
+            if(col == colIndex) {continue;}
+            for(int val : getCol(puzzle, col))
+            {
+                contextValues.add(val);
+            }
+        }
+        return helpers.intArrayFromArrayList(contextValues);
+    }
+
     private boolean contains(int[] vals, int targetVal)
     {
         for(int val : vals)
@@ -65,56 +119,53 @@ public class SudokuChecker
         return helpers.intArrayFromArrayList(res);
     }
 
+    public int[][] useDirect(int[][] puzzle)
+    {
+        for(int row = 0; row < 9; row++)
+        {
+            for(int col = 0; col < 9; col++)
+            {
+                if (puzzle[row][col] > 0) {continue;}
+
+                int[] rowPoss = getRow(puzzle, row);
+                int[] colPoss = getCol(puzzle, col);
+                int[] boxPoss = getBox(puzzle, row, col);
+
+                int[] possibleNums = getPossibleNumbers(rowPoss, colPoss, boxPoss);
+                if(possibleNums.length == 1)
+                {
+                    puzzle[row][col] = possibleNums[0];
+                }
+            }
+        }
+        return puzzle;
+    }
+
     public boolean solvePuzzle(int[][] puzzle)
     {
         
-        boolean openValuesStill = true;
         int noChangeCount = 0;
+        int[][] lastPuzzle = puzzle.clone();
 
-        while(openValuesStill)
+        while(helpers.arrayHasZeros(puzzle))
         {
-            openValuesStill = false;
-            boolean changedSomething = false;
-
-            for(int row = 0; row < 9; row++)
-            {
-                for(int col = 0; col < 9; col++)
-                {
-                    if (puzzle[row][col] > 0)
-                    {
-                        continue;
-                    }
-                    int[] rowPoss = getRow(puzzle, row);
-                    int[] colPoss = getCol(puzzle, col);
-                    int[] boxPoss = getBox(puzzle, row, col);
-
-                    int[] possibleNums = getPossibleNumbers(rowPoss, colPoss, boxPoss);
-                    if(possibleNums.length == 1)
-                    {
-                        puzzle[row][col] = possibleNums[0];
-                        changedSomething = true;
-                    }
-                    else
-                    {
-                        openValuesStill = true;
-                    }
-                }
-            }
-            
-            if(changedSomething)
+            puzzle = useContext(puzzle);
+            puzzle = useDirect(puzzle);
+            if(lastPuzzle == puzzle) { noChangeCount++;}
+            else 
             {
                 noChangeCount = 0;
+                lastPuzzle = puzzle.clone();
             }
-            else
+            if(noChangeCount >= 3)
             {
-                noChangeCount++;
-            }
-            if(noChangeCount > 2)
-            {
-                System.out.println("Three useless passes, quitting...");
+                System.out.println("Three failed loops. not solvable: ");
+                helpers.printSudoku(puzzle);
                 return false;
             }
         }
+        System.out.println("Solvable!");
+        helpers.printSudoku(puzzle);
         return true;
     }
 
