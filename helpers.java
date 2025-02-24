@@ -38,6 +38,19 @@ public class helpers {
         return false;
     }
 
+    public static int countZerosIn2DArray(int[][] arr)
+    {
+        int count = 0;
+        for(int[] row: arr) 
+        {
+            for(int val : row)
+            {
+                if(val == 0) {count++;}
+            }
+        }
+        return count;
+    }
+
     public static void printSudoku(int[][] arr)
     {
         String horizBorder = " ";

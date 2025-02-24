@@ -36,6 +36,46 @@ public class SudokuChecker
         return res;
     }
 
+    private boolean onlySpaceForValue(int[][] puzzle, int targetValue, int rowIndex, int colIndex)
+    {
+        int rowTop = 3 * Math.floorDiv(rowIndex , 3);
+        int colTop = 3 * Math.floorDiv(colIndex , 3);
+
+        int unusableOtherRows = 0;
+        //check rows
+        for(int row = rowTop; row < rowTop + 3; row++)
+        {
+            if (row == rowIndex) {continue;} //don't count the space being checked
+            if (puzzle[row][colIndex] > 0) //already a value there, unusable
+            {
+                unusableOtherRows++;
+                continue;
+            }
+            if (contains(getRow(puzzle, row), targetValue)) //if there is already the value in the row
+            {
+                unusableOtherRows++;
+            }
+        }
+
+        int unusableOtherCols = 0;
+        //check rows
+        for(int col = colTop; col < colTop + 3; col++)
+        {
+            if (col == colIndex) {continue;} //don't count the space being checked
+            if (puzzle[rowIndex][col] > 0) //already a value there, unusable
+            {
+                unusableOtherCols++;
+                continue;
+            }
+            if (contains(getCol(puzzle, col), targetValue)) //if there is already the value in the col
+            {
+                unusableOtherCols++;
+            }
+        }
+
+        return unusableOtherRows == 2 && unusableOtherCols == 2;
+    }
+
     private int[][] useContext(int[][] puzzle)
     {
         for(int rowIndex = 0; rowIndex < 9; rowIndex++)
@@ -46,13 +86,12 @@ public class SudokuChecker
                 //cannot have numbers already in box
                 int[] box = getBox(puzzle, rowIndex, colIndex);
 
-                int[] contextVals = getContextValues(puzzle, rowIndex, colIndex);
-
                 
                 for(int i = 1; i <= 9; i++)
                 {
                     if (contains(box, i)) {continue;}
-                    if (helpers.countValuesInArray(contextVals, i) == 4)
+                    
+                    if (onlySpaceForValue(puzzle, i, rowIndex, colIndex))
                     {
                         puzzle[rowIndex][colIndex] = i;
                     }
@@ -145,17 +184,17 @@ public class SudokuChecker
     {
         
         int noChangeCount = 0;
-        int[][] lastPuzzle = puzzle.clone();
+        int spacesLeft = helpers.countZerosIn2DArray(puzzle);
 
         while(helpers.arrayHasZeros(puzzle))
         {
             puzzle = useContext(puzzle);
             puzzle = useDirect(puzzle);
-            if(lastPuzzle == puzzle) { noChangeCount++;}
+            if(spacesLeft == helpers.countZerosIn2DArray(puzzle)) { noChangeCount++;}
             else 
             {
                 noChangeCount = 0;
-                lastPuzzle = puzzle.clone();
+                spacesLeft = helpers.countZerosIn2DArray(puzzle);
             }
             if(noChangeCount >= 3)
             {
