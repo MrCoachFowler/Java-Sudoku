@@ -98,6 +98,7 @@ public class SudokuChecker
                     if (onlySpaceForValue(puzzle, i, rowIndex, colIndex))
                     {
                         puzzle[rowIndex][colIndex] = i;
+                        return puzzle;
                     }
                 }
             }
@@ -164,8 +165,8 @@ public class SudokuChecker
 
         while(helpers.arrayHasZeros(puzzle))
         {
-            puzzle = useContext(puzzle);
             puzzle = useDirect(puzzle);
+            puzzle = useContext(puzzle);
             if(spacesLeft == helpers.countZerosIn2DArray(puzzle)) { noChangeCount++;}
             else 
             {
