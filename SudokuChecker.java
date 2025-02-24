@@ -82,14 +82,18 @@ public class SudokuChecker
         {
             for(int colIndex = 0; colIndex < 9; colIndex++)
             {
-                if(puzzle[rowIndex][colIndex] > 0) {continue;}
-                //cannot have numbers already in box
+                if(puzzle[rowIndex][colIndex] > 0) {continue;} //already a number there
+                
                 int[] box = getBox(puzzle, rowIndex, colIndex);
+                int[] row = getRow(puzzle, rowIndex);
+                int[] col = getCol(puzzle, colIndex);
 
                 
                 for(int i = 1; i <= 9; i++)
                 {
-                    if (contains(box, i)) {continue;}
+                    if (contains(box, i)) {continue;}//cannot have numbers already in box
+                    if (contains(row, i)) {continue;}//cannot have numbers already in row
+                    if (contains(col, i)) {continue;}//cannot have numbers already in col
                     
                     if (onlySpaceForValue(puzzle, i, rowIndex, colIndex))
                     {
@@ -99,34 +103,6 @@ public class SudokuChecker
             }
         }
         return puzzle;
-    }
-        
-    private int[] getContextValues(int[][] puzzle, int rowIndex, int colIndex)
-    {
-        //locate the top of the box
-        int rowTop = 3 * Math.floorDiv(rowIndex , 3);
-        int colTop = 3 * Math.floorDiv(colIndex , 3);
-
-        //create a container for context values
-        ArrayList<Integer> contextValues = new ArrayList<>();
-        //collect context values
-        for(int row = rowTop; row < rowTop + 3; row++)
-        {
-            if(row == rowIndex) {continue;}
-            for(int val : getRow(puzzle, row))
-            {
-                contextValues.add(val);
-            }
-        }
-        for(int col = colTop; col < colTop + 3; col++)
-        {
-            if(col == colIndex) {continue;}
-            for(int val : getCol(puzzle, col))
-            {
-                contextValues.add(val);
-            }
-        }
-        return helpers.intArrayFromArrayList(contextValues);
     }
 
     private boolean contains(int[] vals, int targetVal)
@@ -180,7 +156,7 @@ public class SudokuChecker
         return puzzle;
     }
 
-    public boolean solvePuzzle(int[][] puzzle)
+    public int[][] solvePuzzle(int[][] puzzle)
     {
         
         int noChangeCount = 0;
@@ -199,13 +175,11 @@ public class SudokuChecker
             if(noChangeCount >= 3)
             {
                 System.out.println("Three failed loops. not solvable: ");
-                helpers.printSudoku(puzzle);
-                return false;
+                return puzzle;
             }
         }
         System.out.println("Solvable!");
-        helpers.printSudoku(puzzle);
-        return true;
+        return puzzle;
     }
 
 

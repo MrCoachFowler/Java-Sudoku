@@ -51,23 +51,39 @@ public class helpers {
         return count;
     }
 
-    public static void printSudoku(int[][] arr)
+    public static void printSudoku(int[][] arr, int[][] origArr)
     {
+
         String horizBorder = " ";
         for(int i = 0; i < 9; i++)
         {
             horizBorder += "----";
         }
         System.out.println(horizBorder);
-        for(int[] row : arr) 
+        for(int row = 0; row < arr.length; row++) 
         {
             System.out.print("|");
-            for(int val : row)
+            for(int col = 0; col < arr[row].length; col++)
             {
-                System.out.print(" " + val + " |");
+                int val = arr[row][col];
+                if(val == origArr[row][col]) {System.out.print(" " + val + " |");}
+                else {System.out.print(" \u001B[32m" + val + "\u001B[0m |");}
             }
             System.out.println();
             System.out.println(horizBorder);
         }
+    }
+
+    public static int[][] arrayDeepCopy(int[][] arr)
+    {
+        int[][] res = new int[arr.length][arr[0].length];
+        for(int row = 0; row < arr.length; row++)
+        {
+            for(int col = 0; col < arr[0].length; col++)
+            {
+                res[row][col] = arr[row][col];
+            }
+        }
+        return res;
     }
 }
