@@ -12,6 +12,9 @@ public class test {
             {2, 0, 0, 6, 4, 0, 0, 5, 0},
             {0, 0, 0, 0, 0, 1, 0, 0, 0}
         };
+        SudokuMaker sm = new SudokuMaker();
+        int[][] puzz1 = sm.makeTable();
+        helpers.printSudoku(puzz1);
         int[][] solvedPuzzle = helpers.arrayDeepCopy(puzzle);
 
         SudokuChecker s = new SudokuChecker();

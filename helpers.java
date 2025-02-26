@@ -74,6 +74,32 @@ public class helpers {
         }
     }
 
+    public static void printSudoku(int[][] arr)
+    {
+
+        String horizBorder = "-";
+        for(int i = 0; i < 10; i++)
+        {
+            horizBorder += "----";
+        }
+        System.out.println(horizBorder);
+        
+        for(int[] row : arr) 
+        {
+            int indexer = 0;
+            System.out.print("||");
+            for(int val : row)
+            {
+                indexer++;
+                System.out.print(" " + val + " ");
+                if(indexer % 3 == 0) {System.out.print("||");}
+                else {System.out.print("|");}
+            }
+            System.out.println();
+            System.out.println(horizBorder);
+        }
+    }
+
     public static int[][] arrayDeepCopy(int[][] arr)
     {
         int[][] res = new int[arr.length][arr[0].length];
