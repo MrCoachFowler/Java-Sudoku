@@ -112,4 +112,16 @@ public class helpers {
         }
         return res;
     }
+
+    public static boolean contains(int[][] vals, int[] targetVal)
+    {
+        for(int[] val : vals)
+        {
+            if(val == targetVal)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

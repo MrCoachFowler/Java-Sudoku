@@ -14,11 +14,12 @@ public class test {
         };
         SudokuMaker sm = new SudokuMaker();
         int[][] puzz1 = sm.makeTable();
-        helpers.printSudoku(puzz1);
-        int[][] solvedPuzzle = helpers.arrayDeepCopy(puzzle);
+        int[][] readyPuzz1 = sm.assignDifficulty(puzz1, "Easy");
+        helpers.printSudoku(readyPuzz1);
+        int[][] solvedPuzzle = helpers.arrayDeepCopy(readyPuzz1);
 
         SudokuChecker s = new SudokuChecker();
         s.solvePuzzle(solvedPuzzle);
-        helpers.printSudoku(solvedPuzzle, puzzle);
+        helpers.printSudoku(solvedPuzzle, readyPuzz1);
     }
 }

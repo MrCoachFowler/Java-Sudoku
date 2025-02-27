@@ -140,4 +140,36 @@ public class SudokuMaker
         
         return res;
     }
+
+    public int[][] assignDifficulty(int[][] puzzle, String difficulty)
+    {
+        //create an empty copy to edit later
+        int[][] res = helpers.arrayDeepCopy(puzzle);
+
+        //define difficulty
+        int numValsToRemove = 45;
+        if(difficulty.equals("Medium")) {numValsToRemove = 50;}
+        else if(difficulty.equals("Hard")) {numValsToRemove = 55;}
+        
+        //create a list of coordinates to remove from the puzzle
+        int[][] values = new int[numValsToRemove][2];
+        int valuesRemoved = 0;
+        while(valuesRemoved < numValsToRemove)
+        {
+            int randRow = (int) (Math.random() * 9);
+            int randCol = (int) (Math.random() * 9);
+            int[] coord = {randRow, randCol};
+            if(!helpers.contains(values, coord))
+            {
+                values[valuesRemoved] = coord;
+                valuesRemoved++;
+            }
+        }
+
+        for(int[] coord : values)
+        {
+            res[coord[0]][coord[1]] = 0;
+        }
+        return res;
+    }
 }
