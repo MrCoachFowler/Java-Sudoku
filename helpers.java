@@ -76,7 +76,7 @@ public class helpers {
                     {
                         int val = arr[(r*3)+row][(c*3)+col];
                         if(val == origArr[(r*3)+row][(c*3)+col]) {System.out.print(" " + val + " ");}
-                        else {System.out.print(" \u001B[32m" + val + "\u001B[0m |");}
+                        else {System.out.print(" \u001B[32m" + val + "\u001B[0m ");}
                     }
                     
                 }
