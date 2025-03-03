@@ -54,22 +54,35 @@ public class helpers {
     public static void printSudoku(int[][] arr, int[][] origArr)
     {
 
-        String horizBorder = " ";
-        for(int i = 0; i < 9; i++)
+        String horizBorder = "|";
+        for(int i = 0; i < 3; i++)
         {
-            horizBorder += "----";
+            horizBorder += "---------|";
         }
+        
         System.out.println(horizBorder);
-        for(int row = 0; row < arr.length; row++) 
-        {
-            System.out.print("|");
-            for(int col = 0; col < arr[row].length; col++)
+        for (int r = 0; r < 3; r++) {
+            
+        
+            for(int row = 0; row < 3; row++) 
             {
-                int val = arr[row][col];
-                if(val == origArr[row][col]) {System.out.print(" " + val + " |");}
-                else {System.out.print(" \u001B[32m" + val + "\u001B[0m |");}
+                
+                for (int c = 0; c < 3; c++) 
+                {
+                    
+                    System.out.print("|");
+                    
+                    for(int col = 0; col < 3; col++)
+                    {
+                        int val = arr[(r*3)+row][(c*3)+col];
+                        if(val == origArr[(r*3)+row][(c*3)+col]) {System.out.print(" " + val + " ");}
+                        else {System.out.print(" \u001B[32m" + val + "\u001B[0m ");}
+                    }
+                    
+                }
+                System.out.println("|");
+                
             }
-            System.out.println();
             System.out.println(horizBorder);
         }
     }
